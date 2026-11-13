@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Mohamed El Anfour</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: application multi-pages — barre de navigation flottante, pages en grilles "bento", appli mobile avec barre d'onglets en bas */
+:root{
+  --bg:#0A1020; --bg2:#0E1730; --card:#111B33; --card2:#16223F; --line:#22304F;
+  --fg:#EAF0FA; --muted:#94A3BF; --accent:#38D3F2; --accent-ink:#04202A; --warm:#FFB547;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:20px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F7FB; --bg2:#E8EFF8; --card:#FFFFFF; --card2:#F1F5FB; --line:#DCE3EE;
+  --fg:#0D1830; --muted:#56637C; --accent:#0A8FB0; --accent-ink:#FFFFFF; --warm:#B86E00; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F7FB; --bg2:#E8EFF8; --card:#FFFFFF; --card2:#F1F5FB; --line:#DCE3EE;
+  --fg:#0D1830; --muted:#56637C; --accent:#0A8FB0; --accent-ink:#FFFFFF; --warm:#B86E00; color-scheme:light}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6;min-height:100%;
+  background-image:
+    radial-gradient(900px 500px at 85% -10%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 70%),
+    radial-gradient(700px 400px at -10% 40%,color-mix(in srgb,var(--warm) 9%,transparent),transparent 70%),
+    radial-gradient(color-mix(in srgb,var(--fg) 7%,transparent) 1px,transparent 1px);
+  background-size:auto,auto,24px 24px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- barre du haut ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding-block:14px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:color-mix(in srgb,var(--card) 78%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 18px}
+.logo{font-family:var(--f-display);font-weight:700;font-size:15px;text-decoration:none;letter-spacing:.02em;white-space:nowrap}
+.logo i{font-style:normal;color:var(--accent)}
+.links{display:flex;gap:2px;list-style:none;margin:0;padding:0}
+.links a{display:block;padding:8px 14px;border-radius:999px;font-weight:500;font-size:15px;color:var(--muted);text-decoration:none;transition:color .2s,background .2s}
+.links a:hover{color:var(--fg)}
+.links a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+.cta-mini{font-weight:600;font-size:14px;text-decoration:none;background:var(--accent);color:var(--accent-ink);padding:9px 16px;border-radius:999px;white-space:nowrap}
+@media (max-width:860px){.links{display:none}}
+
+/* ---------- barre d'onglets mobile ---------- */
+.tabs{display:none}
+@media (max-width:860px){
+  .tabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;
+    background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  .tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font-size:11px;font-weight:500;color:var(--muted);text-decoration:none;border-radius:12px}
+  .tabs a[aria-current="page"]{color:var(--accent)}
+  .tabs svg{width:22px;height:22px}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---------- pages ---------- */
+.page{padding-block:24px 64px;animation:enter .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:.0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kicker{font-family:var(--f-mono);font-size:13px;color:var(--accent);margin:0 0 10px;letter-spacing:.03em}
+h1,h2,h3{text-wrap:balance}
+.h-page{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,5vw,52px);line-height:1.05;letter-spacing:-.02em;margin:0 0 14px}
+.sub{color:var(--muted);max-width:60ch;margin:0 0 36px;font-size:18px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-body);font-weight:600;font-size:16px;padding:14px 22px;border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.btn svg{width:18px;height:18px}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn .soon{font-family:var(--f-mono);font-size:11px;font-weight:500;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--warm) 20%,transparent);color:var(--warm)}
+
+/* ---------- accueil ---------- */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,48px);align-items:center;padding-block:clamp(24px,5vw,56px) 40px}
+@media (max-width:700px){.hero{grid-template-columns:1fr}}
+.photo{position:relative;width:clamp(160px,24vw,240px);aspect-ratio:1;max-width:100%}
+.photo .ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,var(--accent),var(--warm),var(--accent));padding:3px}
+.photo .inner{width:100%;height:100%;border-radius:50%;background:var(--card2);display:grid;place-items:center;overflow:hidden}
+.photo .inner span{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,6vw,64px);color:var(--fg);opacity:.85}
+.photo .inner img{width:100%;height:100%;object-fit:cover}
+.status{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:14px;padding:7px 14px 7px 12px;border-radius:999px;background:color-mix(in srgb,var(--warm) 14%,transparent);color:var(--warm);border:1px solid color-mix(in srgb,var(--warm) 35%,transparent)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--warm);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warm) 60%,transparent)}80%,100%{box-shadow:0 0 0 9px transparent}}
+.name{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,7.4vw,84px);line-height:.98;letter-spacing:-.03em;margin:18px 0 14px}
+.name em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--warm));-webkit-background-clip:text;background-clip:text;color:transparent}
+.role{font-size:clamp(18px,2.4vw,22px);font-weight:500;margin:0 0 26px;color:var(--muted)}
+.role b{color:var(--fg);font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.bento>*{min-width:0}
+.b-2{grid-column:span 2}.b-3{grid-column:span 3}.b-4{grid-column:span 4}
+@media (max-width:960px){.b-2{grid-column:span 3}.b-4{grid-column:span 6}.b-3{grid-column:span 6}}
+@media (max-width:620px){.bento>*{grid-column:1/-1}}
+.label{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 14px}
+.big{font-family:var(--f-display);font-weight:600;font-size:clamp(22px,2.6vw,28px);line-height:1.15;margin:0 0 6px}
+.card p{margin:0;color:var(--muted)}
+.mlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:620px){.mlist{grid-template-columns:1fr}}
+.mlist li{background:var(--card2);border-radius:14px;padding:16px}
+.mlist strong{display:block;font-size:16px;margin-bottom:4px}
+.mlist span{color:var(--muted);font-size:15px;line-height:1.5;display:block}
+.urgent{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 22%,var(--card)),var(--card) 70%)}
+.urgent .big{color:var(--fg)}
+.topo svg{width:100%;height:auto;display:block}
+.n rect{fill:var(--card2);stroke:var(--line)}
+.n.k rect{fill:color-mix(in srgb,var(--accent) 16%,var(--card2));stroke:var(--accent)}
+.n text{fill:var(--fg);font-family:var(--f-mono);font-size:11px}
+.n text.s{fill:var(--muted);font-size:9.5px}
+.w{stroke:var(--accent);stroke-width:1.5;fill:none}
+.w.d{stroke-dasharray:4 4;animation:flow 1.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-16}}
+
+/* ---------- compétences ---------- */
+.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:960px){.skills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.skills{grid-template-columns:1fr}}
+.skill .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);margin-bottom:16px}
+.skill .ico svg{width:22px;height:22px}
+.skill h3{font-family:var(--f-display);font-weight:600;font-size:18px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.chips li{font-family:var(--f-mono);font-size:13px;padding:6px 11px;border-radius:999px;background:var(--card2);border:1px solid var(--line)}
+
+/* ---------- projets ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.filters button{font-family:var(--f-body);font-weight:500;font-size:15px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.projects{grid-template-columns:1fr}}
+.proj{display:flex;flex-direction:column;gap:14px;transition:border-color .2s,transform .2s}
+.proj:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));transform:translateY(-2px)}
+.cover{height:120px;border-radius:14px;background:
+  radial-gradient(circle at 20% 30%,color-mix(in srgb,var(--accent) 35%,transparent),transparent 55%),
+  radial-gradient(circle at 80% 70%,color-mix(in srgb,var(--warm) 25%,transparent),transparent 55%),var(--card2);
+  display:flex;align-items:flex-end;justify-content:space-between;padding:12px 14px;font-family:var(--f-mono);font-size:12px;color:var(--fg)}
+.badge{font-family:var(--f-mono);font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid currentColor}
+.badge.wip{color:var(--warm)}.badge.ok{color:var(--accent)}
+.proj h3{font-family:var(--f-display);font-weight:600;font-size:19px;line-height:1.25;margin:0}
+.proj dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:15px}
+.proj dt{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2px}
+.proj dd{margin:0}
+.proj .chips{margin-top:auto}
+
+/* HomeLab bento */
+.topo-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.more{font-weight:600;font-size:14px;color:var(--accent);text-decoration:none;margin-bottom:14px}
+.zone rect{fill:none;stroke:var(--muted);stroke-dasharray:3 4;opacity:.7}
+.zone.z2 rect{stroke:var(--accent);opacity:.9}
+.zone text{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.zone.z2 text{fill:var(--accent)}
+
+/* projet phare */
+a.proj{text-decoration:none;color:inherit}
+.featured{grid-column:1/-1;display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:center}
+@media (max-width:860px){.featured{grid-template-columns:1fr}}
+.featured>*{min-width:0}
+.shot{position:relative;border-radius:14px;overflow:hidden;background:var(--card2);border:1px solid var(--line)}
+.shot img{display:block;width:100%;height:auto}
+.shot .badge{position:absolute;top:12px;left:12px;background:var(--card)}
+.f-body{display:flex;flex-direction:column;gap:12px}
+.featured h3{font-size:clamp(20px,2.4vw,26px)}
+.go{font-weight:600;color:var(--accent)}
+
+.roadmap{border-style:dashed}
+.r-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.r-head h3{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0}
+.r-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:14px}
+@media (max-width:760px){.r-list{grid-template-columns:1fr}}
+.r-list li{background:var(--card2);border-radius:14px;padding:16px}
+.r-list strong{display:block;margin-bottom:4px}
+.r-list span{color:var(--muted);font-size:15px;line-height:1.5;display:block}
+.extra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:620px){.extra{grid-template-columns:1fr}}
+.extra .big{font-size:20px}
+
+/* page projet */
+.back{display:inline-block;margin-bottom:20px;font-weight:600;font-size:15px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--fg)}
+.meta-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:0 0 48px}
+@media (max-width:700px){.meta-strip{grid-template-columns:1fr}}
+.meta-strip>div{background:var(--card);padding:18px 20px}
+.meta-strip dt{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.meta-strip dd{margin:4px 0 0;font-weight:600}
+.d-sec{margin-bottom:56px}
+.d-h{font-family:var(--f-display);font-weight:600;font-size:clamp(22px,3vw,30px);margin:0 0 16px}
+.d-p{color:var(--muted);max-width:65ch;margin:0 0 20px}
+.goals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:960px){.goals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.goals{grid-template-columns:1fr}}
+.goals strong{display:block;margin-bottom:6px;font-size:17px}
+.goals p{font-size:15px;line-height:1.5}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
+.fig{margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.fig img{display:block;width:100%;height:auto;border-radius:10px}
+.fig img.arch{min-width:720px;background:#fff}
+.fig img.term{min-width:620px}
+.fig figcaption{font-size:14px;color:var(--muted);padding:10px 4px 2px}
+code{font-family:var(--f-mono);font-size:.88em;padding:1px 6px;border-radius:6px;background:var(--card2);border:1px solid var(--line)}
+table.ip{width:100%;min-width:560px;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:15px}
+.ip th{text-align:left;font-family:var(--f-mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--card2);padding:12px 16px}
+.ip td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top}
+.ip td:nth-child(3){font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--accent)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:40px;counter-reset:st}
+.steps li{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;align-items:start;counter-increment:st}
+@media (max-width:860px){.steps li{grid-template-columns:1fr;gap:16px}}
+.s-txt::before{content:counter(st);display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-weight:700;margin-bottom:14px}
+.s-txt h4{font-size:20px;margin:0 0 8px;line-height:1.3}
+.s-txt p{margin:0;color:var(--muted)}
+.bilan{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+@media (max-width:960px){.bilan{grid-template-columns:1fr}}
+.quote p:last-child{font-size:19px;line-height:1.45;color:var(--fg)}
+.next{background:linear-gradient(135deg,color-mix(in srgb,var(--warm) 16%,var(--card)),var(--card) 70%)}
+.d-end{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+/* ---------- parcours ---------- */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.cols>*{min-width:0}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl li{position:relative;padding:0 0 26px 32px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
+.tl li.now::before{border-color:var(--warm);background:var(--warm)}
+.when{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tl h3{font-size:17px;font-weight:700;margin:2px 0 0;line-height:1.35}
+.org{color:var(--accent);font-weight:600;font-size:15px;margin:2px 0 6px}
+.tl p{margin:0;color:var(--muted);font-size:15px}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+@media (max-width:860px){.contact{grid-template-columns:1fr}}
+.contact>*{min-width:0}
+.c-big{font-family:var(--f-display);font-weight:600;font-size:clamp(26px,4vw,40px);line-height:1.1;margin:0 0 16px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row>div{min-width:0}
+.k{display:block;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.v{font-size:17px;font-weight:500;word-break:break-word;user-select:all}
+.copy{font-family:var(--f-mono);font-size:12px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--fg);cursor:pointer;white-space:nowrap}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+footer{padding-block:8px 32px;color:var(--muted);font-size:13px}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <a class="logo" href="#accueil">M<i>.</i>El Anfour</a>
+      <ul class="links">
+        <li><a href="#accueil" data-nav="accueil">Accueil</a></li>
+        <li><a href="#competences" data-nav="competences">Compétences</a></li>
+        <li><a href="#projets" data-nav="projets">Projets</a></li>
+        <li><a href="#parcours" data-nav="parcours">Parcours</a></li>
+        <li><a href="#contact" data-nav="contact">Contact</a></li>
+      </ul>
+      <a class="cta-mini" href="#contact">Me recruter</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= ACCUEIL ================= -->
+  <section class="page" id="p-accueil" data-page="accueil">
+    <div class="hero">
+      <div class="photo">
+        <div class="ring"><div class="inner"><img src="photo-pro.webp" alt="Portrait de Mohamed El Anfour" width="640" height="640"></div></div>
+      </div>
+      <div>
+        <span class="status"><span class="dot" aria-hidden="true"></span>Disponible immédiatement · alternance Master 2</span>
+        <h1 class="name">Mohamed<br><em>El Anfour</em></h1>
+        <p class="role"><b>Administrateur Systèmes &amp; Réseaux</b> · Cybersécurité</p>
+        <div class="ctas">
+          <a class="btn primary" href="CV-Mohamed-El-Anfour.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+            Voir mon CV (PDF)
+          </a>
+          <a class="btn ghost" href="#projets">Voir mes projets</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento">
+      <div class="card urgent b-4">
+        <p class="label">Ma recherche</p>
+        <p class="big">Alternance en Master 2 Ingénierie Système, Réseau et Cybersécurité</p>
+        <p>Contrat d'apprentissage de 12 mois, Bac+5. Je suis en 2e année à l'Institut F2I et je peux démarrer en entreprise dès maintenant. Rythme : 1 semaine à l'école, 3 semaines en entreprise.</p>
+      </div>
+      <div class="card b-2">
+        <p class="label">Localisation</p>
+        <p class="big">Île-de-France</p>
+        <p>Viry-Châtillon (91). Mobile dans toute l'Île-de-France.</p>
+      </div>
+
+      <div class="card b-3 topo">
+        <div class="topo-head"><p class="label">Mon HomeLab · Proxmox VE</p><a class="more" href="#projet-swarm">Voir le projet →</a></div>
+        <svg viewBox="0 0 420 300" role="img" aria-label="Schéma du HomeLab : Internet, box Bbox, pare-feu pfSense, switch virtuel VLAN aware, VLAN 10 d'administration et VLAN 20 DMZ avec le cluster Docker Swarm de trois nœuds">
+          <path class="w d" d="M210 38 V56"/>
+          <path class="w d" d="M210 86 V104"/>
+          <path class="w" d="M210 134 V152"/>
+          <path class="w" d="M210 182 V192 H79 V200 M210 192 H287 V200"/>
+          <g class="n"><rect x="160" y="8" width="100" height="30" rx="15"/><text x="210" y="27" text-anchor="middle">Internet</text></g>
+          <g class="n"><rect x="125" y="56" width="170" height="30" rx="9"/><text x="210" y="75" text-anchor="middle">Bbox · 192.168.1.254</text></g>
+          <g class="n k"><rect x="125" y="104" width="170" height="30" rx="9"/><text x="210" y="123" text-anchor="middle">pfSense · NAT 80/443</text></g>
+          <g class="n"><rect x="125" y="152" width="170" height="30" rx="9"/><text x="210" y="171" text-anchor="middle">vmbr1 · VLAN aware</text></g>
+          <g class="zone"><rect x="8" y="200" width="142" height="92" rx="12"/><text x="18" y="217">VLAN 10 · MGMT</text></g>
+          <g class="zone z2"><rect x="162" y="200" width="250" height="92" rx="12"/><text x="172" y="217">VLAN 20 · DMZ prod</text></g>
+          <g class="n"><rect x="18" y="228" width="122" height="50" rx="9"/><text x="79" y="249" text-anchor="middle">Poste admin</text><text class="s" x="79" y="265" text-anchor="middle">SSH · port 81</text></g>
+          <g class="n k"><rect x="172" y="228" width="74" height="50" rx="9"/><text x="209" y="249" text-anchor="middle">manager</text><text class="s" x="209" y="265" text-anchor="middle">.10 · proxy</text></g>
+          <g class="n"><rect x="252" y="228" width="74" height="50" rx="9"/><text x="289" y="249" text-anchor="middle">worker-1</text><text class="s" x="289" y="265" text-anchor="middle">.11 · Flask</text></g>
+          <g class="n"><rect x="332" y="228" width="74" height="50" rx="9"/><text x="369" y="249" text-anchor="middle">worker-2</text><text class="s" x="369" y="265" text-anchor="middle">.12 · Flask</text></g>
+        </svg>
+      </div>
+      <div class="card b-3">
+        <p class="label">Opérationnel dès mon arrivée</p>
+        <ul class="mlist">
+          <li><strong>Support et dépannage</strong><span>Helpdesk, incidents de connectivité, support N1/N2.</span></li>
+          <li><strong>Administration</strong><span>Droits Active Directory, maintenance des équipements réseau.</span></li>
+          <li><strong>Supervision</strong><span>Surveillance, détection d'anomalies, analyse de logs SIEM.</span></li>
+          <li><strong>Documentation</strong><span>Procédures, rapports d'intervention et d'incidents.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPÉTENCES ================= -->
+  <section class="page" id="p-competences" data-page="competences" hidden>
+    <p class="kicker">Compétences</p>
+    <h2 class="h-page">Mes environnements techniques</h2>
+    <p class="sub">Les outils que j'utilise en formation, en stage et chaque semaine dans mon HomeLab.</p>
+    <div class="skills">
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></div>
+        <h3>Systèmes et virtualisation</h3><ul class="chips"><li>Proxmox VE</li><li>VMware</li><li>Hyper-V</li><li>Windows Server</li><li>Active Directory</li><li>Microsoft 365</li><li>Debian</li><li>Ubuntu</li><li>Kali Linux</li></ul></div>
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v5m0 0-6 5m6-5 6 5"/></svg></div>
+        <h3>Réseaux et sécurité</h3><ul class="chips"><li>Switches</li><li>VLAN</li><li>Routage</li><li>pfSense</li><li>NAT</li><li>DMZ</li><li>Cisco IOS</li><li>Cisco ASA</li><li>GNS3</li><li>Packet Tracer</li></ul></div>
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="5" height="5" rx="1"/><rect x="9.5" y="10" width="5" height="5" rx="1"/><rect x="16" y="10" width="5" height="5" rx="1"/><rect x="9.5" y="3.5" width="5" height="5" rx="1"/><path d="M2 18c3 3 17 3 20 0"/></svg></div>
+        <h3>Conteneurs et services</h3><ul class="chips"><li>Docker</li><li>Docker Swarm</li><li>Nginx Proxy Manager</li><li>Ubuntu Server</li><li>Redis</li></ul></div>
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <h3>Supervision et cybersécurité</h3><ul class="chips"><li>Wazuh SIEM</li><li>Zabbix</li><li>Snort</li><li>Nmap</li><li>Wireshark</li></ul></div>
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg></div>
+        <h3>Développement</h3><ul class="chips"><li>Python · Flask</li><li>HTML / CSS</li><li>JavaScript</li><li>PHP · Laravel</li><li>MySQL</li></ul></div>
+      <div class="card skill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5.5"/></svg></div>
+        <h3>Savoir-être</h3><ul class="chips"><li>Rigueur technique</li><li>Autonomie</li><li>Esprit d'équipe</li><li>Écoute active</li><li>Force de proposition</li></ul></div>
+    </div>
+    <div class="extra">
+      <div class="card"><p class="label">Certification</p><p class="big">SecNumacadémie · ANSSI</p><p>Formation en ligne de l'Agence nationale de la sécurité des systèmes d'information.</p></div>
+      <div class="card"><p class="label">Langues</p><p class="big">Français · Anglais</p><p>Français courant, anglais professionnel, darija marocain courant (3 ans au Maroc).</p></div>
+    </div>
+  </section>
+
+  <!-- ================= PROJETS ================= -->
+  <section class="page" id="p-projets" data-page="projets" hidden>
+    <p class="kicker">Projets</p>
+    <h2 class="h-page">HomeLab et réalisations</h2>
+    <p class="sub">Les projets que je mène sur mon serveur maison et en formation : l'objectif, les outils et le résultat.</p>
+    <div class="filters" role="group" aria-label="Filtrer les projets">
+      <button id="f-all" data-f="all" aria-pressed="true">Tous</button>
+      <button id="f-reseau" data-f="reseau" aria-pressed="false">Réseau</button>
+      <button id="f-conteneurs" data-f="conteneurs" aria-pressed="false">Conteneurs</button>
+      <button id="f-supervision" data-f="supervision" aria-pressed="false">Supervision</button>
+      <button id="f-web" data-f="web" aria-pressed="false">Web</button>
+    </div>
+    <div class="projects">
+      <a class="card proj featured" data-cat="reseau conteneurs" href="#projet-swarm">
+        <div class="shot"><img src="flask-app.webp" alt="Page d'accueil de l'application Flask servie par le cluster Docker Swarm" loading="lazy"><span class="badge ok">terminé · juin 2026</span></div>
+        <div class="f-body">
+          <p class="kicker" style="margin:0">Projet phare · HomeLab</p>
+          <h3>Orchestration et sécurisation d'une infrastructure micro-services</h3>
+          <p>Un cluster Docker Swarm de 3 nœuds isolé dans une DMZ derrière pfSense, avec reverse proxy et application Flask + Redis en haute disponibilité.</p>
+          <ul class="chips"><li>Proxmox VE</li><li>pfSense</li><li>VLAN</li><li>Docker Swarm</li><li>Nginx Proxy Manager</li><li>Flask</li><li>Redis</li></ul>
+          <span class="go">Voir le projet en détail →</span>
+        </div>
+      </a>
+      <article class="card proj" data-cat="supervision reseau">
+        <div class="cover"><span>wazuh · zabbix · pfsense</span><span class="badge ok">projet d'équipe</span></div>
+        <h3>Infrastructure sécurisée et supervisée</h3>
+        <p>Projet de groupe présenté en soutenance : concevoir une infrastructure d'entreprise virtualisée, la sécuriser et la superviser.</p>
+        <dl>
+          <dt>infra</dt><dd>Proxmox, Active Directory et serveurs Linux</dd>
+          <dt>sécurité</dt><dd>Pare-feu pfSense et segmentation réseau</dd>
+          <dt>détection</dt><dd>Centralisation et analyse des logs dans Wazuh SIEM, supervision avec Zabbix</dd>
+          <dt>tests</dt><dd>Simulation d'attaques réseau, analyse avec Nmap et Wireshark</dd>
+        </dl>
+        <ul class="chips"><li>Wazuh</li><li>Zabbix</li><li>pfSense</li><li>Active Directory</li><li>Nmap</li><li>Wireshark</li></ul>
+      </article>
+      <article class="card proj" data-cat="web">
+        <div class="cover"><span>laravel · mysql</span><span class="badge ok">terminé</span></div>
+        <h3>Jeu éducatif web pour apprendre les mathématiques</h3>
+        <p>Projet de fin d'études de licence, réalisé en équipe à la Faculté des sciences de Tétouan.</p>
+        <dl><dt>rôle</dt><dd>Conception, développement, tests et optimisation</dd><dt>équipe</dt><dd>Planification et suivi des tâches</dd></dl>
+        <ul class="chips"><li>Laravel</li><li>PHP</li><li>MySQL</li><li>Bootstrap</li></ul>
+      </article>
+      <article class="card proj" data-cat="reseau">
+        <div class="cover"><span>cisco asa · gns3</span><span class="badge ok">TP Master F2I</span></div>
+        <h3>Pare-feu Cisco ASA</h3>
+        <p>Travaux pratiques du Master : configuration d'un pare-feu Cisco ASA dans un laboratoire virtualisé.</p>
+        <dl><dt>labo</dt><dd>GNS3 sur Hyper-V</dd><dt>thème</dt><dd>Filtrage et sécurisation du périmètre réseau</dd></dl>
+        <ul class="chips"><li>Cisco ASA</li><li>GNS3</li><li>Hyper-V</li></ul>
+      </article>
+      <article class="card roadmap" data-cat="supervision">
+        <div class="r-head"><div><p class="label" style="margin:0 0 4px">Feuille de route du HomeLab</p><h3>Prochains projets</h3></div><span class="badge wip">en préparation</span></div>
+        <ol class="r-list">
+          <li><strong>Supervision du cluster avec Grafana</strong><span>Tableaux de bord en temps réel sur l'état des nœuds Swarm et de l'application.</span></li>
+          <li><strong>SIEM Wazuh sur le HomeLab</strong><span>Centraliser les logs de pfSense et des nœuds, puis détecter des attaques simulées.</span></li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= PROJET : SWARM ================= -->
+  <article class="page detail" id="p-projet-swarm" data-page="projet-swarm" data-parent="projets" hidden>
+    <a class="back" href="#projets">← Tous les projets</a>
+    <p class="kicker">Projet HomeLab · juin 2026</p>
+    <h2 class="h-page">Orchestration et sécurisation d'une infrastructure micro-services</h2>
+    <p class="sub">Comment héberger une application web comme le ferait une vraie entreprise, avec de la haute disponibilité et une vraie sécurité réseau, depuis un seul mini-PC à la maison ?</p>
+
+    <dl class="meta-strip">
+      <div><dt>Contexte</dt><dd>Projet personnel, réalisé seul de A à Z</dd></div>
+      <div><dt>Matériel</dt><dd>1 mini-PC sous Proxmox VE</dd></div>
+      <div><dt>Résultat</dt><dd>Application en ligne, 3 nœuds « Ready »</dd></div>
+    </dl>
+
+    <section class="d-sec">
+      <h3 class="d-h">Objectifs</h3>
+      <div class="goals">
+        <div class="card"><strong>Orchestration</strong><p>Répartir l'application sur plusieurs machines pour qu'elle reste disponible si l'une tombe.</p></div>
+        <div class="card"><strong>Sécuriser les accès</strong><p>Isoler la production dans une DMZ et n'ouvrir que le trafic web.</p></div>
+        <div class="card"><strong>Publication web</strong><p>Exposer l'application proprement derrière un reverse proxy.</p></div>
+        <div class="card"><strong>Montée en compétences</strong><p>Appliquer concrètement les cours de Master sur une infrastructure réelle.</p></div>
+      </div>
+    </section>
+
+    <section class="d-sec">
+      <h3 class="d-h">Architecture</h3>
+      <p class="d-p">Tout tourne sur un mini-PC virtualisé avec Proxmox VE. Le pare-feu pfSense découpe le réseau en deux zones étanches : le VLAN 10 pour l'administration, et le VLAN 20 (DMZ) qui héberge la production.</p>
+      <figure class="fig">
+        <div class="scroll"><img class="arch" src="architecture.webp" alt="Schéma d'architecture complet : Bbox, Proxmox, VM pfSense avec interfaces WAN, LAN et DMZ, switch virtuel vmbr1, zone VLAN 10 d'administration, zone VLAN 20 avec node-manager, node-worker-1 et node-worker-2, reverse proxy, deux instances Flask et base Redis" loading="lazy"></div>
+        <figcaption>Schéma d'architecture complet. Sur téléphone, faites glisser pour explorer.</figcaption>
+      </figure>
+    </section>
+
+    <section class="d-sec">
+      <h3 class="d-h">Plan d'adressage IP</h3>
+      <div class="scroll">
+        <table class="ip">
+          <thead><tr><th>Équipement</th><th>Rôle</th><th>Adresse IP</th><th>Réseau</th></tr></thead>
+          <tbody>
+            <tr><td>Bbox</td><td>Passerelle physique</td><td>192.168.1.254</td><td>/24</td></tr>
+            <tr><td rowspan="3">pfSense</td><td>Interface WAN</td><td>192.168.1.72</td><td>/24</td></tr>
+            <tr><td>LAN · VLAN 10 MGMT</td><td>10.10.10.254</td><td>/24</td></tr>
+            <tr><td>DMZ · VLAN 20</td><td>10.10.20.254</td><td>/24</td></tr>
+            <tr><td>node-manager</td><td>Manager Swarm + reverse proxy</td><td>10.10.20.10</td><td>/24</td></tr>
+            <tr><td>node-worker-1</td><td>Worker Swarm</td><td>10.10.20.11</td><td>/24</td></tr>
+            <tr><td>node-worker-2</td><td>Worker Swarm</td><td>10.10.20.12</td><td>/24</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="d-sec">
+      <h3 class="d-h">Mise en œuvre, étape par étape</h3>
+      <ol class="steps">
+        <li>
+          <div class="s-txt"><h4>Créer le cluster Docker Swarm</h4><p>Trois machines virtuelles sous Ubuntu Server. Le <code>node-manager</code> orchestre l'infrastructure, tandis que <code>node-worker-1</code> et <code>node-worker-2</code> exécutent l'application en haute disponibilité.</p></div>
+          <figure class="fig"><div class="scroll"><img class="term" src="swarm-nodes.webp" alt="Sortie de la commande docker node ls : node-manager Leader, node-worker-1 et node-worker-2, tous Ready et Active" loading="lazy"></div><figcaption><code>docker node ls</code> : les trois nœuds sont prêts.</figcaption></figure>
+        </li>
+        <li>
+          <div class="s-txt"><h4>Filtrer l'entrée avec pfSense</h4><p>Une règle de redirection de port (NAT) n'autorise que le trafic web légitime (ports 80 et 443) vers le cluster. Les accès d'administration (SSH, port 81) restent bloqués depuis l'extérieur.</p></div>
+          <figure class="fig"><img src="pfsense-nat.webp" alt="pfSense, Firewall NAT Port Forward : ports 443 et 80 du WAN redirigés vers 10.10.20.10" loading="lazy"><figcaption>Règles NAT : seuls 80 et 443 sont redirigés vers 10.10.20.10.</figcaption></figure>
+        </li>
+        <li>
+          <div class="s-txt"><h4>Publier l'application via un reverse proxy</h4><p>Nginx Proxy Manager intercepte les requêtes externes et s'appuie sur le DNS interne de Docker pour distribuer dynamiquement le trafic vers le service <code>app-flask</code>.</p></div>
+          <figure class="fig"><img src="npm-proxy.webp" alt="Nginx Proxy Manager : proxy host 192.168.1.72 vers http://app-flask:80, statut Online" loading="lazy"><figcaption>Proxy host vers <code>app-flask</code>, statut « Online ».</figcaption></figure>
+        </li>
+        <li>
+          <div class="s-txt"><h4>Valider en conditions réelles</h4><p>L'application Flask répond et communique via un réseau virtuel isolé (<code>private-net</code>) avec une base Redis, qui incrémente le compteur de visites en temps réel.</p></div>
+          <figure class="fig"><img src="flask-app.webp" alt="Page de l'application : Bienvenue sur mon Cluster Docker Swarm, nombre de visites 14" loading="lazy"><figcaption>L'application en ligne, isolée derrière pfSense.</figcaption></figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="d-sec">
+      <h3 class="d-h">Bilan</h3>
+      <div class="bilan">
+        <div class="card">
+          <p class="label">Compétences mises en pratique</p>
+          <ul class="chips"><li>Administration Linux (Ubuntu)</li><li>Sécurité réseau</li><li>pfSense</li><li>DMZ et VLAN</li><li>NAT</li><li>Docker Swarm</li><li>Reverse proxy</li></ul>
+        </div>
+        <div class="card quote">
+          <p class="label">Ce que j'en retiens</p>
+          <p>« La théorie du cours prend tout son sens quand on doit déboguer soi-même un problème de réseau à 23 h un dimanche. »</p>
+        </div>
+        <div class="card next">
+          <p class="label">Prochaine étape</p>
+          <p>Ajouter une couche de supervision avec Grafana pour surveiller le cluster en temps réel.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-end">
+      <a class="btn ghost" href="#projets">← Tous les projets</a>
+      <a class="btn primary" href="#contact">Discutons de ce projet</a>
+    </div>
+  </article>
+
+  <!-- ================= PARCOURS ================= -->
+  <section class="page" id="p-parcours" data-page="parcours" hidden>
+    <p class="kicker">Parcours</p>
+    <h2 class="h-page">Formation et expériences</h2>
+    <p class="sub">Des mathématiques à l'infrastructure réseau, en passant par le terrain.</p>
+    <div class="cols">
+      <div class="card">
+        <p class="label">Formation</p>
+        <ol class="tl">
+          <li class="now"><span class="when">2026 – 2027 · en cours</span><h3>Master 2 Ingénierie Système, Réseau et Cybersécurité</h3><p class="org">Institut F2I, Vincennes</p><p>En recherche d'entreprise pour poursuivre en alternance.</p></li>
+          <li><span class="when">2025 – 2026</span><h3>Master 1 Ingénierie Système, Réseau et Cybersécurité</h3><p class="org">Institut F2I, Vincennes</p></li>
+          <li><span class="when">2024 – 2025</span><h3>Bachelor Coordinateur de projet informatique</h3><p class="org">Keyce Academy, Montpellier</p><p>Parcours infrastructure réseau.</p></li>
+          <li><span class="when">2021 – 2024</span><h3>Licence fondamentale Sciences Mathématiques et Informatique</h3><p class="org">Faculté des Sciences de Tétouan, Maroc</p><p>Mention Assez Bien. Diplôme reconnu niveau 6 (attestation ENIC-NARIC).</p></li>
+          <li><span class="when">2019 – 2020</span><h3>Baccalauréat série C, sciences mathématiques</h3><p class="org">École Muigni Baraka, Moroni (Comores)</p><p>Mention Assez Bien.</p></li>
+        </ol>
+      </div>
+      <div class="card">
+        <p class="label">Expériences</p>
+        <ol class="tl">
+          <li><span class="when">nov. – déc. 2025</span><h3>Job étudiant · hôte de caisse et service client</h3><p class="org">FNAC Rosny 2, Rosny-sous-Bois</p><p>Accueil et conseil client, encaissements, ouverture et fermeture de caisse.</p></li>
+          <li><span class="when">mai – sept. 2025</span><h3>Stage en administration réseau et support informatique</h3><p class="org">GRETA-CFA Montpellier Littoral</p><p>Séparation des réseaux du GRETA et du lycée sur 2 sites (Montpellier, 5 bâtiments, et Sète) : installation de switches dans chaque bâtiment, création de VLAN par service, support utilisateurs et rapports d'intervention.</p></li>
+          <li><span class="when">janv. – juin 2024</span><h3>Projet de fin d'études</h3><p class="org">Faculté des sciences de Tétouan</p><p>Jeu éducatif web pour l'apprentissage des mathématiques, en équipe.</p></li>
+          <li><span class="when">2022 – 2024</span><h3>Volleyball de haut niveau, 1re division</h3><p class="org">Club CET, Tétouan</p><p>Rigueur, discipline et gestion de la pression en compétition officielle.</p></li>
+          <li><span class="when">été 2021</span><h3>Employé polyvalent</h3><p class="org">Restaurant Lagon Bleu, Comores</p><p>Accueil, caisse, service et gestion des stocks en forte affluence.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="page" id="p-contact" data-page="contact" hidden>
+    <p class="kicker">Contact</p>
+    <div class="contact">
+      <div class="card urgent">
+        <p class="c-big">Vous cherchez un alternant en systèmes, réseaux ou cybersécurité ?</p>
+        <p style="margin-bottom:24px">Je suis disponible immédiatement pour un contrat d'apprentissage de 12 mois, partout en Île-de-France. Je réponds rapidement par email ou téléphone.</p>
+        <div class="ctas">
+          <a class="btn primary" href="CV-Mohamed-El-Anfour.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+            Voir mon CV (PDF)
+          </a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/mohamed-el-anfour-alternance-syst%C3%A8me-r%C3%A9seaux-informatique/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row"><div><span class="k">email</span><span class="v" id="mail">mohamedelanfour@gmail.com</span></div><button class="copy" id="c-mail" data-t="mail">Copier</button></div>
+        <div class="row"><div><span class="k">téléphone</span><span class="v" id="tel">+33 7 59 50 27 59</span></div><button class="copy" id="c-tel" data-t="tel">Copier</button></div>
+        <div class="row"><div><span class="k">localisation</span><span class="v">Viry-Châtillon (91) · mobile dans toute l'Île-de-France</span></div></div>
+        <div class="row"><div><span class="k">rythme</span><span class="v">1 semaine école / 3 semaines entreprise</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Mohamed El Anfour</footer>
+</main>
+
+<nav class="tabs" aria-label="Navigation">
+  <a href="#accueil" data-nav="accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</a>
+  <a href="#competences" data-nav="competences"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Compétences</a>
+  <a href="#projets" data-nav="projets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>Projets</a>
+  <a href="#parcours" data-nav="parcours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><path d="M6 8v8M11 6h10M11 18h10"/></svg>Parcours</a>
+  <a href="#contact" data-nav="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Contact</a>
+</nav>
+
+<script>
+(function(){
+  var pages=document.querySelectorAll('[data-page]'), navs=document.querySelectorAll('[data-nav]');
+  function show(){
+    var id=(location.hash||'#accueil').slice(1);
+    var page=document.querySelector('[data-page="'+id+'"]');
+    if(!page){id='accueil';page=document.querySelector('[data-page="accueil"]');}
+    var navId=page.dataset.parent||id;
+    pages.forEach(function(p){p.hidden=p.dataset.page!==id});
+    navs.forEach(function(a){ if(a.dataset.nav===navId) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show); show();
+
+  document.querySelectorAll('.filters button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.filters button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      document.querySelectorAll('.proj').forEach(function(c){c.hidden=!(b.dataset.f==='all'||c.dataset.cat.split(' ').indexOf(b.dataset.f)>-1)});
+    });
+  });
+
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var el=document.getElementById(b.dataset.t), t=el.textContent.trim();
+      function ok(){b.textContent='Copié';setTimeout(function(){b.textContent='Copier'},1600)}
+      function sel(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Sélectionné'}
+      try{navigator.clipboard.writeText(t).then(ok,sel)}catch(e){sel()}
+    });
+  });
+})();
+</script>
